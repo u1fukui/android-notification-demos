@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,16 +19,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final EditText notificationIdEditText = (EditText) findViewById(R.id.notification_id_edit);
+
         View button = findViewById(R.id.show_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNotification();
+                String notificationId = notificationIdEditText.getText().toString();
+                try {
+                    int id = Integer.parseInt(notificationId);
+                    showNotification(id);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, getString(R.string.notification_id) + "に数値を入力してください。", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
-    private void showNotification() {
+    private void showNotification(int notificationId) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -44,6 +54,6 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(notificationId, builder.build());
     }
 }

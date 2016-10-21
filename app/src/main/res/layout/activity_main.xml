@@ -8,10 +8,25 @@
     android:padding="20dp"
     tools:context=".MainActivity">
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/notification_id_edit"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/notification_id"
+            android:text="0"
+            android:inputType="number" />
+
+    </android.support.design.widget.TextInputLayout>
+
     <Button
         android:id="@+id/show_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Notification" />
+        android:layout_marginTop="20dp"
+        android:text="@string/show_button" />
 
 </LinearLayout>
