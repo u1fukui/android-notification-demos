@@ -1,39 +1,47 @@
 package com.u1fukui.android.demo.notification;
 
+import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ClickEventHandler {
+
+    private MainActivityBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
+        binding.setHandler(this);
+    }
 
-        final EditText notificationIdEditText = (EditText) findViewById(R.id.notification_id_edit);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.show_button:
+                onClickShowNotificationButton();
+                break;
+        }
+    }
 
-        View button = findViewById(R.id.show_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String notificationId = notificationIdEditText.getText().toString();
-                try {
-                    int id = Integer.parseInt(notificationId);
-                    showNotification(id);
-                } catch (NumberFormatException e) {
-                    Toast.makeText(MainActivity.this, getString(R.string.notification_id) + "に数値を入力してください。", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+    public void onClickShowNotificationButton() {
+        String notificationId = binding.notificationIdEditText.getText().toString();
+        try {
+            int id = Integer.parseInt(notificationId);
+            showNotification(id);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, getString(R.string.notification_id) + "に数値を入力してください。", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void showNotification(int notificationId) {
@@ -51,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId, builder.build());
     }
 }
