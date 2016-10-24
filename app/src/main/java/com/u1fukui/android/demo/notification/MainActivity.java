@@ -4,32 +4,15 @@ import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements ClickEventHandler {
-
-    private static final String STYLE_NO = "NoStyle";
-
-    private static final String STYLE_BIG_TEXT = "BigTextStyle";
-
-    private static final String STYLE_BIG_PICTURE = "BigPictureStyle";
-
-    private static final String STYLE_INBOX = "InboxStyle";
-
-    private static final String STYLE_MEDIA = "MediaStyle";
-
-    private static final String STYLE_MESSAGING = "MessagingStyle";
 
     private MainActivityBinding binding;
 
@@ -44,16 +27,8 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     }
 
     private void initSpinner() {
-        String[] array = {
-                STYLE_NO,
-                STYLE_BIG_TEXT,
-                STYLE_BIG_PICTURE,
-                STYLE_INBOX,
-                STYLE_MEDIA,
-                STYLE_MESSAGING
-        };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item_style);
-        adapter.addAll(array);
+        adapter.addAll(NotificationStyle.createStyleNameList());
         binding.spinner.setAdapter(adapter);
     }
 
@@ -67,10 +42,9 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     }
 
     public void onClickShowNotificationButton() {
-        String notificationId = binding.notificationIdEditText.getText().toString();
         try {
-            int id = Integer.parseInt(notificationId);
-            showNotification(id);
+            int notificationId = Integer.parseInt(binding.notificationIdEditText.getText().toString());
+            showNotification(notificationId);
         } catch (NumberFormatException e) {
             Toast.makeText(this, getString(R.string.notification_id) + "に数値を入力してください。", Toast.LENGTH_LONG).show();
         }
@@ -78,83 +52,10 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
 
     private void showNotification(int notificationId) {
         String item = (String) binding.spinner.getSelectedItem();
+        NotificationStyle style = NotificationStyle.fromDisplayName(item);
+        Notification notification = new NotificationCreator(this).createNotification(style);
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationId, createNotification(item));
-    }
-
-    private Notification createNotification(String style) {
-        switch (style) {
-            case STYLE_BIG_TEXT:
-                return createBigTextNotification();
-            case STYLE_BIG_PICTURE:
-                return createBigPictureNotification();
-            case STYLE_INBOX:
-                return createInboxNotification();
-            case STYLE_MEDIA:
-                return null;
-            case STYLE_MESSAGING:
-                return null;
-            case STYLE_NO:
-            default:
-                return createDefaultNotification();
-        }
-    }
-
-    private NotificationCompat.Builder createCommonNotificationBuilder() {
-        Intent resultIntent = new Intent(this, ResultActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(ResultActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        return new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("ContentTitle")
-                .setContentText("ContentText")
-                .setContentIntent(resultPendingIntent);
-    }
-
-    private Notification createDefaultNotification() {
-        return createCommonNotificationBuilder().build();
-    }
-
-    private Notification createBigTextNotification() {
-        NotificationCompat.BigTextStyle style =
-                new NotificationCompat.BigTextStyle()
-                        .bigText("BigText")
-                        .setBigContentTitle("BigContentTitle")
-                        .setSummaryText("SummaryText");
-
-        return createCommonNotificationBuilder()
-                .setStyle(style)
-                .build();
-    }
-
-    private Notification createBigPictureNotification() {
-        NotificationCompat.BigPictureStyle style =
-                new NotificationCompat.BigPictureStyle()
-                        .setBigContentTitle("BigContentTitle")
-                        .setSummaryText("SummaryText")
-                        .bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.big_picture_sample))
-                        .bigLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.big_picture_sample));
-
-        return createCommonNotificationBuilder()
-                .setStyle(style)
-                .build();
-    }
-
-    private Notification createInboxNotification() {
-        NotificationCompat.InboxStyle style =
-                new NotificationCompat.InboxStyle()
-                        .setBigContentTitle("BigContentTitle")
-                        .setSummaryText("SummaryText");
-        for (int i = 0; i < 10; i++) {
-            style.addLine("Line" + (i + 1));
-        }
-
-        return createCommonNotificationBuilder()
-                .setStyle(style)
-                .build();
+        notificationManager.notify(notificationId, notification);
     }
 }
