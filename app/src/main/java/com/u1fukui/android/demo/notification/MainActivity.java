@@ -2,11 +2,13 @@ package com.u1fukui.android.demo.notification;
 
 import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -73,28 +75,27 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
 
     private void showNotification(int notificationId) {
         String item = (String) binding.spinner.getSelectedItem();
-        switch (item) {
-            case STYLE_NO:
-                showDefaultNotification(notificationId);
-                break;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, createNotification(item));
+    }
+
+    private Notification createNotification(String style) {
+        switch (style) {
             case STYLE_BIG_TEXT:
-                break;
+                return createBigTextNotification();
             case STYLE_BIG_PICTURE:
-                break;
-            case  STYLE_MEDIA:
-                break;
+                return createBigPictureNotification();
+            case STYLE_MEDIA:
+                return null;
             case STYLE_MESSAGING:
-                break;
+                return null;
+            case STYLE_NO:
+            default:
+                return createDefaultNotification();
         }
     }
 
-    private void showDefaultNotification(int notificationId) {
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
-
+    private NotificationCompat.Builder createCommonNotificationBuilder() {
         Intent resultIntent = new Intent(this, ResultActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -102,8 +103,39 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentIntent(resultPendingIntent);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationId, builder.build());
+        return new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("ContentTitle")
+                .setContentText("ContentText")
+                .setContentIntent(resultPendingIntent);
+    }
+
+    private Notification createDefaultNotification() {
+        return createCommonNotificationBuilder().build();
+    }
+
+    private Notification createBigTextNotification() {
+        NotificationCompat.BigTextStyle style =
+                new NotificationCompat.BigTextStyle()
+                        .bigText("BigText")
+                        .setBigContentTitle("BigContentTitle")
+                        .setSummaryText("SummaryText");
+
+        return createCommonNotificationBuilder()
+                .setStyle(style)
+                .build();
+    }
+
+    private Notification createBigPictureNotification() {
+        NotificationCompat.BigPictureStyle style =
+                new NotificationCompat.BigPictureStyle()
+                        .setBigContentTitle("BigContentTitle")
+                        .setSummaryText("SummaryText")
+                        .bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.big_picture_sample))
+                        .bigLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.big_picture_sample));
+
+        return createCommonNotificationBuilder()
+                .setStyle(style)
+                .build();
     }
 }
