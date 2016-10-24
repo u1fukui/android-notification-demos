@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
 
     private static final String STYLE_BIG_PICTURE = "BigPictureStyle";
 
+    private static final String STYLE_INBOX = "InboxStyle";
+
     private static final String STYLE_MEDIA = "MediaStyle";
 
     private static final String STYLE_MESSAGING = "MessagingStyle";
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
                 STYLE_NO,
                 STYLE_BIG_TEXT,
                 STYLE_BIG_PICTURE,
+                STYLE_INBOX,
                 STYLE_MEDIA,
                 STYLE_MESSAGING
         };
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
                 return createBigTextNotification();
             case STYLE_BIG_PICTURE:
                 return createBigPictureNotification();
+            case STYLE_INBOX:
+                return createInboxNotification();
             case STYLE_MEDIA:
                 return null;
             case STYLE_MESSAGING:
@@ -133,6 +138,20 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
                         .setSummaryText("SummaryText")
                         .bigPicture(BitmapFactory.decodeResource(getResources(), R.drawable.big_picture_sample))
                         .bigLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.big_picture_sample));
+
+        return createCommonNotificationBuilder()
+                .setStyle(style)
+                .build();
+    }
+
+    private Notification createInboxNotification() {
+        NotificationCompat.InboxStyle style =
+                new NotificationCompat.InboxStyle()
+                        .setBigContentTitle("BigContentTitle")
+                        .setSummaryText("SummaryText");
+        for (int i = 0; i < 10; i++) {
+            style.addLine("Line" + (i + 1));
+        }
 
         return createCommonNotificationBuilder()
                 .setStyle(style)
