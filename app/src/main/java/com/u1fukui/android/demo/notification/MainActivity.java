@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ClickEventHandler {
+
+    private static final int SUMMARY_NOTIFICATION_ID = 999;
 
     private MainActivityBinding binding;
 
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         Notification notification = NotificationCreator.createNotification(this, style);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notificationManager.notify(SUMMARY_NOTIFICATION_ID, NotificationCreator.createSummaryNotification(this));
+        }
         notificationManager.notify(notificationId, notification);
     }
 }
