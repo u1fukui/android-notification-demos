@@ -54,8 +54,7 @@ public class NotificationCreator {
                 //TODO: 実装
                 return null;
             case STYLE_MESSAGING:
-                //TODO: 実装
-                return null;
+                return createMessagingStyle();
             case STYLE_NO:
             default:
                 return null;
@@ -86,6 +85,17 @@ public class NotificationCreator {
         for (int i = 0; i < 10; i++) {
             style.addLine("Line" + (i + 1));
         }
+        return style;
+    }
+
+    private NotificationCompat.Style createMessagingStyle() {
+        NotificationCompat.MessagingStyle style = new NotificationCompat.MessagingStyle("Me")
+                        .setConversationTitle("ConversationTitle");
+
+        for (int i = 0; i < 10; i++) {
+            style.addMessage("Message" + i, System.currentTimeMillis(), i % 2 == 0 ? "Friend" : null);
+        }
+
         return style;
     }
 }
