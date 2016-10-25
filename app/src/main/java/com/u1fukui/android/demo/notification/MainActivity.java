@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements ClickEventHandler {
 
     private MainActivityBinding binding;
@@ -27,8 +30,13 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     }
 
     private void initSpinner() {
+        List<String> list = new ArrayList<>();
+        for (NotificationStyle style : NotificationStyle.values()) {
+            list.add(style.getDisplayName());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item_style);
-        adapter.addAll(NotificationStyle.createStyleNameList());
+        adapter.addAll(list);
         binding.spinner.setAdapter(adapter);
     }
 
@@ -41,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         }
     }
 
-    public void onClickShowNotificationButton() {
+    private void onClickShowNotificationButton() {
         try {
             int notificationId = Integer.parseInt(binding.notificationIdEditText.getText().toString());
             showNotification(notificationId);
@@ -53,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     private void showNotification(int notificationId) {
         String item = (String) binding.spinner.getSelectedItem();
         NotificationStyle style = NotificationStyle.fromDisplayName(item);
-        Notification notification = new NotificationCreator(this).createNotification(style);
+        Notification notification = NotificationCreator.createNotification(this, style);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId, notification);
