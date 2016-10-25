@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     private void showNotification(int notificationId) {
         String item = (String) binding.spinner.getSelectedItem();
         NotificationStyle style = NotificationStyle.fromDisplayName(item);
-        Notification notification = NotificationCreator.createNotification(this, style);
+        Notification notification = NotificationCreator.createNotification(this, style, binding.headsUpSwitch.isChecked());
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (binding.groupingSwitch.isChecked() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

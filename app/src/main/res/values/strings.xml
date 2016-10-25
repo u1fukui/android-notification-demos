@@ -2,6 +2,7 @@
     <string name="app_name">notification demos</string>
 
     <string name="notification_style">Style</string>
+    <string name="notification_heads_up">Heads-up</string>
     <string name="notification_grouping">Grouping</string>
     <string name="notification_id">Notification ID</string>
     <string name="show_button">Show Notification</string>

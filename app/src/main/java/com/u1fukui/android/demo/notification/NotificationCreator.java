@@ -13,7 +13,7 @@ public class NotificationCreator {
 
     private static String GROUP_KEY = "group_key";
 
-    public static Notification createNotification(Context context, NotificationStyle notificationStyle) {
+    public static Notification createNotification(Context context, NotificationStyle notificationStyle, boolean needHeadsUp) {
         Intent resultIntent = new Intent(context, ResultActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
@@ -29,8 +29,18 @@ public class NotificationCreator {
                         .setContentText("ContentText")
                         .setContentInfo("ContentInfo")
                         .setColor(Color.RED)
-                        .setContentIntent(resultPendingIntent)
                         .setGroup(GROUP_KEY);
+
+        if (needHeadsUp) {
+            // Ref.) https://developer.android.com/about/versions/android-5.0-changes.html#BehaviorNotifications
+            //
+            // Examples of conditions that may trigger heads-up notifications include:
+            // - The user's activity is in fullscreen mode (the app uses fullScreenIntent)
+            // - The notification has high priority and uses ringtones or vibrations
+            builder.setFullScreenIntent(resultPendingIntent, true);
+        } else {
+            builder.setContentIntent(resultPendingIntent);
+        }
 
         NotificationCompat.Style style = notificationStyle.createStyle(context);
         if (style != null) {

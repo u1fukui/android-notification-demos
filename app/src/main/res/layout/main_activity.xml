@@ -18,8 +18,7 @@
             tools:context=".MainActivity">
 
             <TextView
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
+                style="@style/ItemTitle"
                 android:text="@string/notification_style" />
 
             <Spinner
@@ -28,8 +27,17 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                style="@style/ItemTitle"
+                android:text="@string/notification_heads_up" />
+
+            <Switch
+                android:id="@+id/heads_up_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="false" />
+
+            <TextView
+                style="@style/ItemTitle"
                 android:text="@string/notification_grouping" />
 
             <Switch
@@ -39,8 +47,7 @@
                 android:checked="false" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ItemTitle"
                 android:text="@string/notification_id" />
 
             <EditText
