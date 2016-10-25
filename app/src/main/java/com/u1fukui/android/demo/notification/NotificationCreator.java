@@ -4,6 +4,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -21,9 +23,12 @@ public class NotificationCreator {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(android.R.drawable.ic_popup_reminder)
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                         .setContentTitle("ContentTitle")
                         .setContentText("ContentText")
+                        .setContentInfo("ContentInfo")
+                        .setColor(Color.RED)
                         .setContentIntent(resultPendingIntent)
                         .setGroup(GROUP_KEY);
 

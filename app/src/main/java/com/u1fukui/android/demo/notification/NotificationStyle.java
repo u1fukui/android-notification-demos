@@ -28,8 +28,7 @@ public enum NotificationStyle {
             return new NotificationCompat.BigPictureStyle()
                     .setBigContentTitle(BIG_CONTENT_TITLE)
                     .setSummaryText(SUMMARY_TEXT)
-                    .bigPicture(BitmapFactory.decodeResource(context.getResources(), R.drawable.big_picture_sample))
-                    .bigLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.big_picture_sample));
+                    .bigPicture(BitmapFactory.decodeResource(context.getResources(), R.drawable.big_picture_sample));
         }
     },
     STYLE_INBOX("InboxStyle") {
