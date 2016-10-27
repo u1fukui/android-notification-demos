@@ -2,19 +2,23 @@ package com.u1fukui.android.demo.notification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 
 public class NotificationCreator {
 
-    private static String GROUP_KEY = "group_key";
+    public static final String KEY_REPLY_TEXT = "key.reply_text";
+
+    private static final String GROUP_KEY = "group_key";
 
     public static Notification createNotification(Context context,
-            NotificationStyle notificationStyle, int actionButtonCount, boolean needHeadsUp) {
+            NotificationStyle notificationStyle, int actionButtonCount, boolean isDisrectReply, boolean needHeadsUp) {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
@@ -24,7 +28,8 @@ public class NotificationCreator {
                         .setContentText("ContentText")
                         .setContentInfo("ContentInfo")
                         .setColor(Color.RED)
-                        .setGroup(GROUP_KEY);
+                        .setGroup(GROUP_KEY)
+                        .setAutoCancel(true);
 
         // Heads-up
         PendingIntent intent = createPendingIntent(context, ResultActivity.class);
@@ -47,7 +52,13 @@ public class NotificationCreator {
 
         // Action button
         for (int i = 0; i < actionButtonCount; i++) {
-            builder.addAction(createAction(context, i));
+            NotificationCompat.Action action;
+            if (isDisrectReply) {
+                action = createDirectReplyAction(context, i);
+            } else {
+                action = createAction(context, i);
+            }
+            builder.addAction(action);
         }
 
         return builder.build();
@@ -63,6 +74,21 @@ public class NotificationCreator {
     private static NotificationCompat.Action createAction(Context context, int position) {
         PendingIntent intent = createPendingIntent(context, ActionActivity.class);
         return new NotificationCompat.Action(0, "Action" + position, intent);
+    }
+
+    private static NotificationCompat.Action createDirectReplyAction(Context context, int position) {
+        Intent intent = new Intent("direct_reply");
+        intent.setComponent(new ComponentName(context, DirectReplyReceiver.class));
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_REPLY_TEXT)
+                .setLabel("Let's reply")
+                .build();
+
+        return new NotificationCompat.Action.Builder(0, "Reply" + position, pendingIntent)
+                .addRemoteInput(remoteInput)
+                .setAllowGeneratedReplies(true) // for Android Wear
+                .build();
     }
 
     public static Notification createSummaryNotification(Context context) {

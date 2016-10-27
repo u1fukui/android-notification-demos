@@ -29,6 +29,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <receiver android:name=".DirectReplyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="direct_reply" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

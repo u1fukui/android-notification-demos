@@ -17,6 +17,7 @@
             android:columnCount="2"
             tools:context=".MainActivity">
 
+            <!-- Style -->
             <TextView
                 style="@style/ItemTitle"
                 android:text="@string/notification_style" />
@@ -26,6 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <!-- button count -->
             <TextView
                 style="@style/ItemTitle"
                 android:text="@string/notification_button_count" />
@@ -35,6 +37,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <!-- Direct Reply -->
+            <TextView
+                style="@style/ItemTitle"
+                android:text="@string/notification_direct_reply" />
+
+            <Switch
+                android:id="@+id/direct_reply_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+
+            <!-- Heads-up -->
             <TextView
                 style="@style/ItemTitle"
                 android:text="@string/notification_heads_up" />
@@ -45,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:checked="false" />
 
+            <!-- Grouping -->
             <TextView
                 style="@style/ItemTitle"
                 android:text="@string/notification_grouping" />
@@ -55,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:checked="false" />
 
+            <!-- Notification ID -->
             <TextView
                 style="@style/ItemTitle"
                 android:text="@string/notification_id" />

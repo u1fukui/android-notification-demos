@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
 
         initStyleSpinner();
         initButtonCountSpinner();
+        initDirectReplySwitch();
         initGroupingSwitch();
         binding.notificationIdEditText.setSelection(binding.notificationIdEditText.getText().length());
     }
@@ -62,7 +63,18 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                    compoundButton.setChecked(false);
+                    Toast.makeText(MainActivity.this, "Nougat未満のバージョンでは利用できません", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+    }
+
+    private void initDirectReplySwitch() {
+        binding.directReplySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                     Toast.makeText(MainActivity.this, "Nougat未満のバージョンでは利用できません", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -100,7 +112,8 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         String countString = (String) binding.buttonCountSpinner.getSelectedItem();
         int buttonCount = Integer.parseInt(countString);
 
-        Notification notification = NotificationCreator.createNotification(this, style, buttonCount, binding.headsUpSwitch.isChecked());
+        Notification notification = NotificationCreator
+                .createNotification(this, style, buttonCount, binding.directReplySwitch.isChecked(), binding.headsUpSwitch.isChecked());
         notificationManager.notify(notificationId, notification);
     }
 }
