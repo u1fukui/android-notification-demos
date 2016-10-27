@@ -1,4 +1,4 @@
-package com.u1fukui.android.demo.notification;
+package com.u1fukui.android.demo.notification.notification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -10,6 +10,10 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
+
+import com.u1fukui.android.demo.notification.R;
+import com.u1fukui.android.demo.notification.ui.ActionActivity;
+import com.u1fukui.android.demo.notification.ui.ResultActivity;
 
 public class SampleNotificationBuilder {
 

@@ -1,4 +1,4 @@
-package com.u1fukui.android.demo.notification;
+package com.u1fukui.android.demo.notification.notification;
 
 import android.app.Notification;
 import android.content.BroadcastReceiver;

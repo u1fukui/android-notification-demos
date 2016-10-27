@@ -1,6 +1,4 @@
-package com.u1fukui.android.demo.notification;
-
-import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
+package com.u1fukui.android.demo.notification.ui;
 
 import android.app.Notification;
 import android.databinding.DataBindingUtil;
@@ -13,6 +11,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+
+import com.u1fukui.android.demo.notification.R;
+import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
+import com.u1fukui.android.demo.notification.notification.NotificationStyle;
+import com.u1fukui.android.demo.notification.notification.SampleNotificationBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,10 @@
-package com.u1fukui.android.demo.notification;
+package com.u1fukui.android.demo.notification.notification;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.NotificationCompat;
+
+import com.u1fukui.android.demo.notification.R;
 
 
 public enum NotificationStyle {
