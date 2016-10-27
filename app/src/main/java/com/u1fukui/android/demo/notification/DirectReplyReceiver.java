@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 
@@ -16,9 +15,9 @@ public class DirectReplyReceiver extends BroadcastReceiver {
         CharSequence messageText = getMessageText(intent);
 
         Notification repliedNotification =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(android.R.drawable.ic_dialog_email)
-                        .setContentText(messageText)
+                SampleNotificationBuilder.createBaseNotificationBuilder(context)
+                        .setContentTitle(messageText)
+                        .setContentText(null)
                         .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -28,7 +27,7 @@ public class DirectReplyReceiver extends BroadcastReceiver {
     private CharSequence getMessageText(Intent intent) {
         Bundle results = RemoteInput.getResultsFromIntent(intent);
         if (results != null) {
-            return results.getCharSequence(NotificationCreator.KEY_REPLY_TEXT);
+            return results.getCharSequence(SampleNotificationBuilder.KEY_REPLY_TEXT);
         }
         return null;
     }

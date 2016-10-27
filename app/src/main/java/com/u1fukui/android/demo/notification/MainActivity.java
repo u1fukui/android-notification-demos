@@ -3,11 +3,11 @@ package com.u1fukui.android.demo.notification;
 import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
 
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ClickEventHandler {
 
-    private static final int SUMMARY_NOTIFICATION_ID = 999;
+    private static final int GROUP_SUMMARY_NOTIFICATION_ID = 9999; // 他の Notification ID と被らないように
 
     private MainActivityBinding binding;
 
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         binding.notificationIdEditText.setSelection(binding.notificationIdEditText.getText().length());
     }
 
+    //region Initialize
     private void initStyleSpinner() {
         List<String> list = new ArrayList<>();
         for (NotificationStyle style : NotificationStyle.values()) {
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
             }
         });
     }
+    //endregion
 
     @Override
     public void onClick(View view) {
@@ -101,19 +103,42 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     }
 
     private void showNotification(int notificationId) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (binding.groupingSwitch.isChecked() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            notificationManager.notify(SUMMARY_NOTIFICATION_ID, NotificationCreator.createSummaryNotification(this));
+        NotificationStyle style = NotificationStyle.fromDisplayName((String) binding.styleSpinner.getSelectedItem());
+        int buttonCount = Integer.parseInt((String) binding.buttonCountSpinner.getSelectedItem());
+        boolean isDirectReply = binding.directReplySwitch.isChecked();
+        boolean isHeadsUp = binding.headsUpSwitch.isChecked();
+        boolean isGrouping = binding.groupingSwitch.isChecked();
+
+        // Grouping
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (isGrouping && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notificationManager.notify(GROUP_SUMMARY_NOTIFICATION_ID, createGroupSummaryNotification());
         }
 
-        String styleString = (String) binding.styleSpinner.getSelectedItem();
-        NotificationStyle style = NotificationStyle.fromDisplayName(styleString);
+        // Notify
+        SampleNotificationBuilder builder =
+                new SampleNotificationBuilder(this)
+                        .notificationStyle(style)
+                        .headsUp(isHeadsUp);
 
-        String countString = (String) binding.buttonCountSpinner.getSelectedItem();
-        int buttonCount = Integer.parseInt(countString);
+        for (int i = 0; i < buttonCount; i++) {
+            if (isDirectReply) {
+                builder.addDirectReplyAction("Reply" + i);
+            } else {
+                builder.addAction("Action" + i);
+            }
+        }
 
-        Notification notification = NotificationCreator
-                .createNotification(this, style, buttonCount, binding.directReplySwitch.isChecked(), binding.headsUpSwitch.isChecked());
-        notificationManager.notify(notificationId, notification);
+        notificationManager.notify(notificationId, builder.build());
+    }
+
+    private Notification createGroupSummaryNotification() {
+        return new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .setSummaryText("SummaryText"))
+                .setGroup(SampleNotificationBuilder.KEY_GROUP)
+                .setGroupSummary(true)
+                .build();
     }
 }
