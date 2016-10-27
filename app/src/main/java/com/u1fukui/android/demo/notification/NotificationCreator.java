@@ -13,13 +13,8 @@ public class NotificationCreator {
 
     private static String GROUP_KEY = "group_key";
 
-    public static Notification createNotification(Context context, NotificationStyle notificationStyle, boolean needHeadsUp) {
-        Intent resultIntent = new Intent(context, ResultActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(ResultActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+    public static Notification createNotification(Context context,
+            NotificationStyle notificationStyle, int actionButtonCount, boolean needHeadsUp) {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
@@ -31,22 +26,43 @@ public class NotificationCreator {
                         .setColor(Color.RED)
                         .setGroup(GROUP_KEY);
 
+        // Heads-up
+        PendingIntent intent = createPendingIntent(context, ResultActivity.class);
         if (needHeadsUp) {
             // Ref.) https://developer.android.com/about/versions/android-5.0-changes.html#BehaviorNotifications
             //
             // Examples of conditions that may trigger heads-up notifications include:
             // - The user's activity is in fullscreen mode (the app uses fullScreenIntent)
             // - The notification has high priority and uses ringtones or vibrations
-            builder.setFullScreenIntent(resultPendingIntent, true);
+            builder.setFullScreenIntent(intent, true);
         } else {
-            builder.setContentIntent(resultPendingIntent);
+            builder.setContentIntent(intent);
         }
 
+        // Style
         NotificationCompat.Style style = notificationStyle.createStyle(context);
         if (style != null) {
             builder.setStyle(style);
         }
+
+        // Action button
+        for (int i = 0; i < actionButtonCount; i++) {
+            builder.addAction(createAction(context, i));
+        }
+
         return builder.build();
+    }
+
+    private static PendingIntent createPendingIntent(Context context, Class activityClass) {
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(activityClass);
+        stackBuilder.addNextIntent(new Intent(context, activityClass));
+        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private static NotificationCompat.Action createAction(Context context, int position) {
+        PendingIntent intent = createPendingIntent(context, ActionActivity.class);
+        return new NotificationCompat.Action(0, "Action" + position, intent);
     }
 
     public static Notification createSummaryNotification(Context context) {

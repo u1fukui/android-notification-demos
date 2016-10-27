@@ -22,7 +22,16 @@
                 android:text="@string/notification_style" />
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/style_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/ItemTitle"
+                android:text="@string/notification_button_count" />
+
+            <Spinner
+                android:id="@+id/button_count_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

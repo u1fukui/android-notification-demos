@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         binding.setHandler(this);
 
         initStyleSpinner();
+        initButtonCountSpinner();
         initGroupingSwitch();
         binding.notificationIdEditText.setSelection(binding.notificationIdEditText.getText().length());
     }
@@ -42,7 +43,18 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item_style);
         adapter.addAll(list);
-        binding.spinner.setAdapter(adapter);
+        binding.styleSpinner.setAdapter(adapter);
+    }
+
+    private void initButtonCountSpinner() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list.add(Integer.toString(i));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item_style);
+        adapter.addAll(list);
+        binding.buttonCountSpinner.setAdapter(adapter);
     }
 
     private void initGroupingSwitch() {
@@ -77,14 +89,18 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
     }
 
     private void showNotification(int notificationId) {
-        String item = (String) binding.spinner.getSelectedItem();
-        NotificationStyle style = NotificationStyle.fromDisplayName(item);
-        Notification notification = NotificationCreator.createNotification(this, style, binding.headsUpSwitch.isChecked());
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (binding.groupingSwitch.isChecked() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             notificationManager.notify(SUMMARY_NOTIFICATION_ID, NotificationCreator.createSummaryNotification(this));
         }
+
+        String styleString = (String) binding.styleSpinner.getSelectedItem();
+        NotificationStyle style = NotificationStyle.fromDisplayName(styleString);
+
+        String countString = (String) binding.buttonCountSpinner.getSelectedItem();
+        int buttonCount = Integer.parseInt(countString);
+
+        Notification notification = NotificationCreator.createNotification(this, style, buttonCount, binding.headsUpSwitch.isChecked());
         notificationManager.notify(notificationId, notification);
     }
 }
