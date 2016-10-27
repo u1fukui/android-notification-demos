@@ -20,8 +20,8 @@ public class DirectReplyReceiver extends BroadcastReceiver {
                         .setContentText(null)
                         .build();
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(0, repliedNotification);
+        int notificationId = intent.getIntExtra(SampleNotificationBuilder.EXTRA_REPLY_NOTIFICATION_ID, -1);
+        NotificationManagerCompat.from(context).notify(notificationId, repliedNotification);
     }
 
     private CharSequence getMessageText(Intent intent) {

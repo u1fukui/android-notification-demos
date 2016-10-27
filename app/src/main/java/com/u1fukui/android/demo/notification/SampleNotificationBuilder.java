@@ -17,6 +17,8 @@ public class SampleNotificationBuilder {
 
     public static final String KEY_REPLY_TEXT = "key.reply_text";
 
+    public static final String EXTRA_REPLY_NOTIFICATION_ID = "extra.reply_notification_id";
+
     private Context context;
 
     private NotificationCompat.Builder builder;
@@ -55,14 +57,15 @@ public class SampleNotificationBuilder {
         return this;
     }
 
-    public SampleNotificationBuilder addDirectReplyAction(String actionText) {
-        Intent intent = new Intent("direct_reply");
-        intent.setComponent(new ComponentName(context, DirectReplyReceiver.class));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+    public SampleNotificationBuilder addDirectReplyAction(String actionText, int notificationId) {
         RemoteInput remoteInput = new RemoteInput.Builder(KEY_REPLY_TEXT)
                 .setLabel("Let's reply")
                 .build();
+
+        Intent intent = new Intent("direct_reply");
+        intent.setComponent(new ComponentName(context, DirectReplyReceiver.class));
+        intent.putExtra(EXTRA_REPLY_NOTIFICATION_ID, notificationId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(0, actionText, pendingIntent)
                 .addRemoteInput(remoteInput)

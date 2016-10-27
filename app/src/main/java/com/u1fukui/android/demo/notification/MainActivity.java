@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
 
         for (int i = 0; i < buttonCount; i++) {
             if (isDirectReply) {
-                builder.addDirectReplyAction("Reply" + i);
+                builder.addDirectReplyAction("Reply" + i, notificationId);
             } else {
                 builder.addAction("Action" + i);
             }
