@@ -56,7 +56,7 @@ public class SampleNotificationBuilder {
 
     public SampleNotificationBuilder addAction(String actionText) {
         PendingIntent intent = createPendingIntent(context, ActionActivity.class);
-        NotificationCompat.Action action = new NotificationCompat.Action(0, actionText, intent);
+        NotificationCompat.Action action = new NotificationCompat.Action(android.R.drawable.ic_menu_add, actionText, intent);
         builder.addAction(action);
         return this;
     }
@@ -71,7 +71,7 @@ public class SampleNotificationBuilder {
         intent.putExtra(EXTRA_REPLY_NOTIFICATION_ID, notificationId);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action action = new NotificationCompat.Action.Builder(0, actionText, pendingIntent)
+        NotificationCompat.Action action = new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_add, actionText, pendingIntent)
                 .addRemoteInput(remoteInput)
                 .setAllowGeneratedReplies(true) // for Android Wear
                 .build();
