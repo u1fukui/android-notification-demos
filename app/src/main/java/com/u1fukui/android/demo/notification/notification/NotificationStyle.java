@@ -1,10 +1,11 @@
 package com.u1fukui.android.demo.notification.notification;
 
+import com.u1fukui.android.demo.notification.R;
+
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.NotificationCompat;
-
-import com.u1fukui.android.demo.notification.R;
 
 
 public enum NotificationStyle {
@@ -50,15 +51,16 @@ public enum NotificationStyle {
     STYLE_MEDIA("MediaStyle") {
         @Override
         NotificationCompat.Style createStyle(Context context) {
-            return null;
+            MediaSessionCompat session = new MediaSessionCompat(context, "MediaSessionTag");
+            return new NotificationCompat.MediaStyle().setMediaSession(session.getSessionToken());
         }
     },
     STYLE_MESSAGING("MessagingStyle") {
         @Override
         NotificationCompat.Style createStyle(Context context) {
-            NotificationCompat.MessagingStyle style = new NotificationCompat.MessagingStyle(
-                    "Me")
-                    .setConversationTitle("ConversationTitle");
+            NotificationCompat.MessagingStyle style =
+                    new NotificationCompat.MessagingStyle("Me")
+                            .setConversationTitle("ConversationTitle");
 
             for (int i = 0; i < 10; i++) {
                 style.addMessage("Message" + i, System.currentTimeMillis(), i % 2 == 0 ? "Friend" : null);

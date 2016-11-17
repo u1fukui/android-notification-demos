@@ -1,5 +1,11 @@
 package com.u1fukui.android.demo.notification.ui;
 
+import com.u1fukui.android.demo.notification.R;
+import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
+import com.u1fukui.android.demo.notification.notification.MediaPlayerService;
+import com.u1fukui.android.demo.notification.notification.NotificationStyle;
+import com.u1fukui.android.demo.notification.notification.SampleNotificationBuilder;
+
 import android.app.Notification;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -11,11 +17,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Toast;
-
-import com.u1fukui.android.demo.notification.R;
-import com.u1fukui.android.demo.notification.databinding.MainActivityBinding;
-import com.u1fukui.android.demo.notification.notification.NotificationStyle;
-import com.u1fukui.android.demo.notification.notification.SampleNotificationBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,13 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
             notificationManager.notify(GROUP_SUMMARY_NOTIFICATION_ID, createGroupSummaryNotification());
         }
 
-        // Notify
+        // MediaStyle notification
+        if (style == NotificationStyle.STYLE_MEDIA && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            MediaPlayerService.startService(this, notificationId);
+            return;
+        }
+
+        // Other notification
         SampleNotificationBuilder builder =
                 new SampleNotificationBuilder(this)
                         .notificationStyle(style)
@@ -131,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
                 builder.addAction("Action" + i);
             }
         }
-
         notificationManager.notify(notificationId, builder.build());
     }
 

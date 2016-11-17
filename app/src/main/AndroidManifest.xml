@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.u1fukui.android.demo.notification">
 
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -36,6 +38,6 @@
                 <action android:name="direct_reply" />
             </intent-filter>
         </receiver>
+        <service android:name=".notification.MediaPlayerService" />
     </application>
-
 </manifest>
