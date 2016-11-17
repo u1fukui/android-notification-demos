@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -50,6 +51,23 @@ public class MainActivity extends AppCompatActivity implements ClickEventHandler
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item_style);
         adapter.addAll(list);
         binding.styleSpinner.setAdapter(adapter);
+        binding.styleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                NotificationStyle style = NotificationStyle.fromDisplayName((String) binding.styleSpinner.getSelectedItem());
+                if (style == NotificationStyle.STYLE_MEDIA) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                        Toast.makeText(MainActivity.this, "MediaStyleはLollipop未満のバージョンでは利用できません", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "MediaStyleでは、" + getString(R.string.notification_id) + "項目以外の項目は無視されます", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
 
     private void initButtonCountSpinner() {
